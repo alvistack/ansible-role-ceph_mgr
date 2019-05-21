@@ -46,7 +46,7 @@
   post_tasks:
     - name: start services
       service:
-        name: ceph-mon.target
+        name: "ceph-mon@{{ ansible_hostname }}"
         state: started
       changed_when: false
       ignore_errors: true
@@ -65,7 +65,7 @@
   post_tasks:
     - name: start services
       service:
-        name: ceph-mgr.target
+        name: "ceph-mgr@{{ ansible_hostname }}"
         state: started
       changed_when: false
       ignore_errors: true

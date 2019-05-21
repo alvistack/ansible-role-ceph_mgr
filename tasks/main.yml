@@ -119,7 +119,7 @@
 
 - name: enable services
   service:
-    name: ceph-mgr.target
+    name: "ceph-mgr@{{ ansible_hostname }}"
     enabled: true
   changed_when: false
   ignore_errors: true
