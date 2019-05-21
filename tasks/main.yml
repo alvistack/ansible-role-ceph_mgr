@@ -55,7 +55,29 @@
   with_items:
     - { dest: "/etc/ceph" }
     - { dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}", owner: "ceph", group: "ceph" }
-    - { dest: "/var/lib/ceph/tmp", owner: "ceph", group: "ceph" }
+  tags: ceph_mgr
+
+- name: touch files
+  copy:
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0644') }}"
+    content: ""
+    force: false
+  with_items:
+    - { dest: "/etc/ceph/ceph.conf", owner: "ceph", group: "ceph" }
+  tags: ceph_mgr
+
+- name: tweak settings in ini files
+  ini_file:
+    path: "/etc/ceph/ceph.conf"
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  with_items: "{{ ceph_mgr_config }}"
+  notify:
+    - ceph_mgr | systemctl restart
   tags: ceph_mgr
 
 - name: create manager keyring
@@ -85,6 +107,7 @@
     mode: "{{ item.mode | default('0644') }}"
     state: "{{ item.state | default('file') }}"
   with_items:
+    - { dest: "/etc/ceph/ceph.conf", owner: "ceph", group: "ceph" }
     - { dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring", owner: "ceph", group: "ceph", mode: "0600" }
   notify:
     - ceph_mgr | systemctl restart
