@@ -19,7 +19,7 @@
     name: "{{ item.name }}"
     state: restarted
   with_items:
-    - { name: "ceph-mgr@{{ inventory_hostname }}" }
+    - { name: "ceph-mgr.target" }
   when:
     - ansible_service_mgr == 'systemd'
   changed_when: false

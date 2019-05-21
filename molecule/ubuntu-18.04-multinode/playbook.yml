@@ -45,7 +45,7 @@
   post_tasks:
     - name: start services
       service:
-        name: "ceph-mon@{{ inventory_hostname }}"
+        name: ceph-mon.target
         state: started
       changed_when: false
       ignore_errors: true
@@ -63,7 +63,7 @@
   post_tasks:
     - name: start services
       service:
-        name: "ceph-mgr@{{ inventory_hostname }}"
+        name: ceph-mgr.target
         state: started
       changed_when: false
       ignore_errors: true
