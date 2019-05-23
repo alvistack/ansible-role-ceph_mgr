@@ -99,7 +99,6 @@
   shell: |
     set -o pipefail
     ceph \
-      --cluster ceph \
       auth get-or-create mgr.{{ inventory_hostname }} \
       mon 'allow profile mgr' \
       osd 'allow *' \
