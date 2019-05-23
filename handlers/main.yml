@@ -14,6 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: ceph_mgr | systemctl daemon-reload
+  systemd:
+    daemon_reload: true
+  when:
+    - ansible_service_mgr == 'systemd'
+  changed_when: false
+  ignore_errors: true
+
 - name: ceph_mgr | systemctl restart
   service:
     name: "{{ item.name }}"
