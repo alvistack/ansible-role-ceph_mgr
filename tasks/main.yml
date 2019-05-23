@@ -54,7 +54,22 @@
     state: "{{ item.state | default('directory') }}"
   with_items:
     - { dest: "/etc/ceph" }
+    - { dest: "/lib/systemd/system" }
     - { dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}", owner: "ceph", group: "ceph" }
+  tags: ceph_mgr
+
+- name: copy templates
+  template:
+    src: "./templates{{ item.dest }}.j2"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0644') }}"
+  with_items:
+    - { dest: "/lib/systemd/system/ceph-mgr@.service" }
+  notify:
+    - ceph_mgr | systemctl daemon-reload
+    - ceph_mgr | systemctl restart
   tags: ceph_mgr
 
 - name: touch files
@@ -108,6 +123,7 @@
     state: "{{ item.state | default('file') }}"
   with_items:
     - { dest: "/etc/ceph/ceph.conf", owner: "ceph", group: "ceph" }
+    - { dest: "/lib/systemd/system/ceph-mgr@.service" }
     - { dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring", owner: "ceph", group: "ceph", mode: "0600" }
   notify:
     - ceph_mgr | systemctl restart
