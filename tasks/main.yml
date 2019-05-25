@@ -55,7 +55,7 @@
   with_items:
     - { dest: "/etc/ceph" }
     - { dest: "/lib/systemd/system" }
-    - { dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}", owner: "ceph", group: "ceph" }
+    - { dest: "/var/lib/ceph/mgr/ceph-{{ ansible_hostname }}", owner: "ceph", group: "ceph" }
   tags: ceph_mgr
 
 - name: copy templates
@@ -99,14 +99,14 @@
   shell: |
     set -o pipefail
     ceph \
-      auth get-or-create mgr.{{ inventory_hostname }} \
+      auth get-or-create mgr.{{ ansible_hostname }} \
       mon 'allow profile mgr' \
       osd 'allow *' \
       mds 'allow *' \
-      -o /var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring
+      -o /var/lib/ceph/mgr/ceph-{{ ansible_hostname }}/keyring
   args:
     executable: "/bin/bash"
-    creates: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring"
+    creates: "/var/lib/ceph/mgr/ceph-{{ ansible_hostname }}/keyring"
   register: result
   changed_when: result is not succeeded
   notify:
@@ -123,7 +123,7 @@
   with_items:
     - { dest: "/etc/ceph/ceph.conf", owner: "ceph", group: "ceph" }
     - { dest: "/lib/systemd/system/ceph-mgr@.service" }
-    - { dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring", owner: "ceph", group: "ceph", mode: "0600" }
+    - { dest: "/var/lib/ceph/mgr/ceph-{{ ansible_hostname }}/keyring", owner: "ceph", group: "ceph", mode: "0600" }
   notify:
     - ceph_mgr | systemctl restart
   tags: ceph_mgr
