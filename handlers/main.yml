@@ -27,6 +27,7 @@
     name: "{{ item.name }}"
     state: restarted
   with_items:
+    - { name: "ceph-mgr.target" }
     - { name: "ceph-mgr@{{ ansible_hostname }}" }
   changed_when: false
   ignore_errors: true
