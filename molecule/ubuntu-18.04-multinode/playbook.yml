@@ -44,6 +44,12 @@
   roles:
     - role: ceph-mon
       ceph_fsid: "{{ groups['ceph-mon'][0] | to_uuid }}"
+      ceph_mon_host: >-
+        {%- for host in ansible_play_hosts -%}
+        {{ hostvars[host]['ansible_enp0s8']['ipv4']['address'] }},
+        {%- endfor -%}
+      ceph_public_network: "{{ (ansible_enp0s8.ipv4.network + '/' + ansible_enp0s8.ipv4.netmask) | ipaddr('net') }}"
+      ceph_cluster_network: "{{ ceph_public_network }}"
 
   post_tasks:
     - name: start services
