@@ -17,9 +17,6 @@
 # Ceph version.
 ceph_version: "nautilus"
 
-# Ceph fsid.
-ceph_fsid: "{{ ansible_play_hosts[0] | to_uuid }}"
-
 # Ceph mgr configs.
 ceph_mgr_config:
   - { section: "mgr", option: "mgr tick period", value: "5" }
