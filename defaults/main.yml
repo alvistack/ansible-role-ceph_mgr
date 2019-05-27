@@ -19,5 +19,5 @@ ceph_version: "nautilus"
 
 # Ceph mgr configs.
 ceph_mgr_config:
-  - { section: "mgr", option: "mgr tick period", value: "5" }
-  - { section: "mgr", option: "mon mgr beacon grace", value: "30" }
+  - { state: "present", section: "mgr", option: "mgr tick period", value: "5" }
+  - { state: "present", section: "mgr", option: "mon mgr beacon grace", value: "30" }
