@@ -16,10 +16,18 @@
 
 - hosts: all
   remote_user: root
+  become: true
   roles:
     - role: bootstrap
     - role: ntp
+
+- hosts: ceph-mon
+  remote_user: root
+  become: true
+  roles:
     - role: ceph-common
+      ceph_fsid: "{{ groups['ceph-mon'][0] | to_uuid }}"
+    - role: ceph-mon
 
   post_tasks:
     - name: ceph --version
@@ -37,15 +45,9 @@
       register: result
       changed_when: result is not succeeded
 
-- hosts: ceph-mon
-  remote_user: root
-  roles:
-    - role: ceph-mon
-
-  post_tasks:
     - name: start services
       service:
-        name: "ceph-mon@{{ inventory_hostname }}"
+        name: "ceph-mon@{{ ansible_hostname }}"
         state: started
       changed_when: false
       ignore_errors: true
@@ -57,13 +59,16 @@
 
 - hosts: ceph-mgr
   remote_user: root
+  become: true
   roles:
+    - role: ceph-common
+      ceph_fsid: "{{ groups['ceph-mon'][0] | to_uuid }}"
     - role: ceph-mgr
 
   post_tasks:
     - name: start services
       service:
-        name: "ceph-mgr@{{ inventory_hostname }}"
+        name: "ceph-mgr@{{ ansible_hostname }}"
         state: started
       changed_when: false
       ignore_errors: true

@@ -54,23 +54,60 @@
     state: "{{ item.state | default('directory') }}"
   with_items:
     - { dest: "/etc/ceph" }
-    - { dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}", owner: "ceph", group: "ceph" }
-    - { dest: "/var/lib/ceph/tmp", owner: "ceph", group: "ceph" }
+    - { dest: "/lib/systemd/system" }
+    - { dest: "/var/lib/ceph/mgr/ceph-{{ ansible_hostname }}", owner: "ceph", group: "ceph" }
+  tags: ceph_mgr
+
+- name: copy templates
+  template:
+    src: "./templates{{ item.dest }}.j2"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0644') }}"
+  with_items:
+    - { dest: "/lib/systemd/system/ceph-mgr@.service" }
+  notify:
+    - ceph_mgr | systemctl daemon-reload
+    - ceph_mgr | systemctl restart
+  tags: ceph_mgr
+
+- name: touch files
+  copy:
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0644') }}"
+    content: ""
+    force: false
+  with_items:
+    - { dest: "/etc/ceph/ceph.conf", owner: "ceph", group: "ceph" }
+  tags: ceph_mgr
+
+- name: tweak settings in ini files
+  ini_file:
+    path: "/etc/ceph/ceph.conf"
+    section: "{{ item.section }}"
+    option: "{{ item.option | default(None) or omit }}"
+    value: "{{ item.value | default(None) or omit }}"
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ ceph_mgr_config }}"
+  notify:
+    - ceph_mgr | systemctl restart
   tags: ceph_mgr
 
 - name: create manager keyring
   shell: |
     set -o pipefail
     ceph \
-      --cluster ceph \
-      auth get-or-create mgr.{{ inventory_hostname }} \
+      auth get-or-create mgr.{{ ansible_hostname }} \
       mon 'allow profile mgr' \
       osd 'allow *' \
       mds 'allow *' \
-      -o /var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring
+      --out-file /var/lib/ceph/mgr/ceph-{{ ansible_hostname }}/keyring
   args:
     executable: "/bin/bash"
-    creates: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring"
+    creates: "/var/lib/ceph/mgr/ceph-{{ ansible_hostname }}/keyring"
   register: result
   changed_when: result is not succeeded
   notify:
@@ -85,7 +122,9 @@
     mode: "{{ item.mode | default('0644') }}"
     state: "{{ item.state | default('file') }}"
   with_items:
-    - { dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring", owner: "ceph", group: "ceph", mode: "0600" }
+    - { dest: "/etc/ceph/ceph.conf", owner: "ceph", group: "ceph" }
+    - { dest: "/lib/systemd/system/ceph-mgr@.service" }
+    - { dest: "/var/lib/ceph/mgr/ceph-{{ ansible_hostname }}/keyring", owner: "ceph", group: "ceph", mode: "0600" }
   notify:
     - ceph_mgr | systemctl restart
   tags: ceph_mgr
@@ -96,8 +135,11 @@
 
 - name: enable services
   service:
-    name: "ceph-mgr@{{ inventory_hostname }}"
+    name: "{{ item.name }}"
     enabled: true
+  with_items:
+    - { name: "ceph-mgr.target" }
+    - { name: "ceph-mgr@{{ ansible_hostname }}" }
   changed_when: false
   ignore_errors: true
   tags: ceph_mgr
