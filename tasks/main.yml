@@ -132,17 +132,18 @@
     - ceph_mgr | systemctl restart
   tags: ceph_mgr
 
+- name: flush handlers
+  meta: flush_handlers
+  tags: ceph_mgr
+
 - name: enable services
   service:
     name: "{{ item.name }}"
+    state: "started"
     enabled: true
   loop:
     - { name: "ceph-mgr.target" }
     - { name: "ceph-mgr@{{ ansible_hostname }}" }
   changed_when: false
   ignore_errors: true
-  tags: ceph_mgr
-
-- name: flush handlers
-  meta: flush_handlers
   tags: ceph_mgr

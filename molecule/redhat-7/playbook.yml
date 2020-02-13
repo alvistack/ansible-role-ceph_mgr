@@ -38,40 +38,11 @@
       ceph_public_network: "{{ (ansible_eth1.ipv4.network + '/' + ansible_eth1.ipv4.netmask) | ipaddr('net') }}"
       ceph_cluster_network: "{{ (ansible_eth1.ipv4.network + '/' + ansible_eth1.ipv4.netmask) | ipaddr('net') }}"
 
-  post_tasks:
-    - name: ceph --version
-      command: ceph --version
-      register: result
-      changed_when: result is not succeeded
-
-    - name: rbd --version
-      command: rbd --version
-      register: result
-      changed_when: result is not succeeded
-
-    - name: mount.ceph -h
-      command: mount.ceph -h
-      register: result
-      changed_when: result is not succeeded
-
 - hosts: ceph-mon
   remote_user: root
   become: true
   roles:
     - role: ceph-mon
-
-  post_tasks:
-    - name: start services
-      service:
-        name: "ceph-mon@{{ ansible_hostname }}"
-        state: "started"
-      changed_when: false
-      ignore_errors: true
-
-    - name: ceph --status
-      command: ceph --status
-      register: result
-      changed_when: result is not succeeded
 
 - hosts: ceph-mgr
   remote_user: root
@@ -102,16 +73,3 @@
 
   roles:
     - role: ceph-mgr
-
-  post_tasks:
-    - name: start services
-      service:
-        name: "ceph-mgr@{{ ansible_hostname }}"
-        state: "started"
-      changed_when: false
-      ignore_errors: true
-
-    - name: ceph --status
-      command: ceph --status
-      register: result
-      changed_when: result is not succeeded
