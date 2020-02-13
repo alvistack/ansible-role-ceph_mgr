@@ -135,6 +135,7 @@
 - name: enable services
   service:
     name: "{{ item.name }}"
+    state: "started"
     enabled: true
   loop:
     - { name: "ceph-mgr.target" }
