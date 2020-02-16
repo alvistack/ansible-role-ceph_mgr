@@ -1,11 +1,11 @@
-# Ansible Role for Ceph Manager
+# Ansible Role for Ceph Manager Daemon
 
 [![Travis](https://img.shields.io/travis/alvistack/ansible-role-ceph_mgr.svg)](https://travis-ci.org/alvistack/ansible-role-ceph_mgr)
 [![GitHub release](https://img.shields.io/github/release/alvistack/ansible-role-ceph_mgr.svg)](https://github.com/alvistack/ansible-role-ceph_mgr)
 [![GitHub license](https://img.shields.io/github/license/alvistack/ansible-role-ceph_mgr.svg)](https://github.com/alvistack/ansible-role-ceph_mgr/blob/master/LICENSE)
 [![Ansible Role](https://img.shields.io/badge/galaxy-alvistack.ceph_mgr-blue.svg)](https://galaxy.ansible.com/alvistack/ceph_mgr)
 
-Ansible Role for Ceph Manager Installation.
+Ansible Role for Ceph Manager Daemon Installation.
 
 ## Requirements
 

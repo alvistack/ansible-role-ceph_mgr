@@ -1,4 +1,4 @@
-# Ansible Role for Ceph Manager
+# Ansible Role for Ceph Manager Daemon
 
 ## 4.3.0 - TBC
 
