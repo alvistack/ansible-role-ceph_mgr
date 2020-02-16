@@ -21,12 +21,9 @@
   ignore_errors: true
 
 - name: ceph_mgr | systemctl restart
-  shell: |
-    set -o pipefail
-    systemctl restart ceph-mgr.target
-    systemctl restart ceph-mgr@{{ ansible_hostname }}
-  args:
-    executable: "/bin/bash"
+  service:
+    name: "ceph-mgr.target"
+    state: "restarted"
   loop: "{{ ansible_play_hosts }}"
   delegate_to: "{{ item }}"
   run_once: true
