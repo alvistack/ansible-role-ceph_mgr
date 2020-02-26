@@ -136,7 +136,7 @@
   meta: flush_handlers
   tags: ceph_mgr
 
-- name: enable services
+- name: start services
   service:
     name: "{{ item.name }}"
     state: "started"
