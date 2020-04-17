@@ -82,7 +82,7 @@
     state: "{{ item.state | default('present') }}"
   loop: "{{ ceph_mgr_config }}"
   notify:
-    - ceph_mgr | systemctl restart
+    - ceph_mgr | systemctl restart ceph-mgr.target
   tags: ceph_mgr
 
 - name: prepare files
@@ -95,7 +95,7 @@
   loop:
     - { dest: "/etc/ceph/ceph.conf", owner: "ceph", group: "ceph" }
   notify:
-    - ceph_mgr | systemctl restart
+    - ceph_mgr | systemctl restart ceph-mgr.target
   tags: ceph_mgr
 
 - name: create manager keyring
@@ -115,7 +115,7 @@
   register: result
   changed_when: result is not succeeded
   notify:
-    - ceph_mgr | systemctl restart
+    - ceph_mgr | systemctl restart ceph-mgr.target
   tags: ceph_mgr
 
 - name: copy templates
@@ -129,7 +129,7 @@
     - { dest: "/lib/systemd/system/ceph-mgr@.service" }
   notify:
     - ceph_mgr | systemctl daemon-reload
-    - ceph_mgr | systemctl restart
+    - ceph_mgr | systemctl restart ceph-mgr.target
   tags: ceph_mgr
 
 - name: prepare files
@@ -143,7 +143,7 @@
     - { dest: "/lib/systemd/system/ceph-mgr@.service" }
     - { dest: "/var/lib/ceph/mgr/ceph-{{ ansible_hostname }}/keyring", owner: "ceph", group: "ceph", mode: "0600" }
   notify:
-    - ceph_mgr | systemctl restart
+    - ceph_mgr | systemctl restart ceph-mgr.target
   tags: ceph_mgr
 
 - name: flush handlers
