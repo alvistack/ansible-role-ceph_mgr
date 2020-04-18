@@ -150,7 +150,16 @@
   meta: flush_handlers
   tags: ceph_mgr
 
-- name: start services
+- name: "systemctl start ceph-mgr@{{ ansible_hostname }}"
+  service:
+    name: "ceph-mgr@{{ ansible_hostname }}"
+    state: "started"
+    enabled: true
+  changed_when: false
+  ignore_errors: true
+  tags: ceph_mgr
+
+- name: systemctl start ceph-mgr.target
   service:
     name: "ceph-mgr.target"
     state: "started"
