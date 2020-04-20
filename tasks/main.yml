@@ -146,10 +146,6 @@
     - ceph_mgr | systemctl restart ceph-mgr.target
   tags: ceph_mgr
 
-- name: flush handlers
-  meta: flush_handlers
-  tags: ceph_mgr
-
 - name: "systemctl start ceph-mgr@{{ ansible_hostname }}"
   service:
     name: "ceph-mgr@{{ ansible_hostname }}"
@@ -166,4 +162,8 @@
     enabled: true
   changed_when: false
   ignore_errors: true
+  tags: ceph_mgr
+
+- name: flush handlers
+  meta: flush_handlers
   tags: ceph_mgr
