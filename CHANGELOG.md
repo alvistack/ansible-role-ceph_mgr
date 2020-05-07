@@ -4,6 +4,7 @@
 
 ### Major Changes
 
+  - Enable `pg_autoscaler` for Ceph 14.2 Nautilus
   - Support Fedora 32
   - Support Debian 10
   - Discovery device for OSD from `ansible_devices`
