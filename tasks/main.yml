@@ -171,7 +171,7 @@
 - name: ceph mgr module enable pg_autoscaler
   shell: |
     set -o pipefail
-    ceph mgr module enable pg_autoscaler
+    ceph mgr module enable pg_autoscaler --force
   args:
     executable: "/bin/bash"
   when: inventory_hostname == ansible_play_hosts[0]
