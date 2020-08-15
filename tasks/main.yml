@@ -80,6 +80,7 @@
     option: "{{ item.option | default(None) or omit }}"
     value: "{{ item.value | default(None) or omit }}"
     state: "{{ item.state | default('present') }}"
+    mode: "0644"
   loop: "{{ ceph_mgr_config }}"
   notify:
     - ceph_mgr | systemctl restart ceph-mgr.target
