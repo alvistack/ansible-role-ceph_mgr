@@ -4,7 +4,8 @@
 Description=Ceph cluster manager daemon
 PartOf=ceph-mgr.target
 After=network-online.target local-fs.target time-sync.target
-Wants=network-online.target local-fs.target time-sync.target
+Before=ceph-mgr.target
+Wants=network-online.target local-fs.target time-sync.target ceph-mgr.target
 RequiresMountsFor=/var/lib/ceph
 
 [Service]
