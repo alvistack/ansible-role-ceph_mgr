@@ -95,7 +95,7 @@
 
 - name: create manager keyring
   shell: |
-    set -o pipefail
+    set -euo pipefail
     ceph \
       auth get-or-create mgr.{{ inventory_hostname }} \
       mon 'allow profile mgr' \
@@ -162,7 +162,7 @@
 
 - name: ceph mgr module enable pg_autoscaler
   shell: |
-    set -o pipefail
+    set -euo pipefail
     ceph mgr module enable pg_autoscaler --force
   args:
     executable: "/bin/bash"
