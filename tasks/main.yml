@@ -162,12 +162,11 @@
   changed_when: false
   ignore_errors: true
 
-- name: ceph mgr module enable pg_autoscaler
-  shell: |
-    set -euo pipefail
-    ceph mgr module enable pg_autoscaler --force
-  args:
-    executable: "/bin/bash"
+- name: ceph mgr module enable
+  ceph_mgr_module:
+    name: "{{ item.name }}"
+    state: "enable"
+  loop: "{{ ceph_mgr_module }}"
   when: inventory_hostname == ansible_play_hosts[0]
   changed_when: false
   ignore_errors: true
