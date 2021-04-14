@@ -72,7 +72,7 @@ EXAMPLES = '''
 RETURN = '''#  '''
 
 
-def generate_ceph_cmd(sub_cmd, args, user_key=None, cluster='ceph', user='client.admin', container_image=None):  # noqa: E501
+def generate_ceph_cmd(sub_cmd, args, user_key=None, cluster='ceph', user='client.admin', container_image=None, interactive=False):  # noqa: E501
     '''
     Generate 'ceph' command line to execute
     '''
@@ -80,7 +80,7 @@ def generate_ceph_cmd(sub_cmd, args, user_key=None, cluster='ceph', user='client
     if not user_key:
         user_key = '/etc/ceph/{}.{}.keyring'.format(cluster, user)
 
-    cmd = pre_generate_ceph_cmd(container_image=container_image)
+    cmd = pre_generate_ceph_cmd(container_image=container_image, interactive=interactive)  # noqa: E501
 
     base_cmd = [
         '-n',
@@ -96,20 +96,24 @@ def generate_ceph_cmd(sub_cmd, args, user_key=None, cluster='ceph', user='client
     return cmd
 
 
-def container_exec(binary, container_image):
+def container_exec(binary, container_image, interactive=False):
     '''
     Build the docker CLI to run a command inside a container
     '''
 
     container_binary = os.getenv('CEPH_CONTAINER_BINARY')
-    command_exec = [container_binary,
-                    'run',
-                    '--rm',
-                    '--net=host',
-                    '-v', '/etc/ceph:/etc/ceph:z',
-                    '-v', '/var/lib/ceph/:/var/lib/ceph/:z',
-                    '-v', '/var/log/ceph/:/var/log/ceph/:z',
-                    '--entrypoint=' + binary, container_image]
+    command_exec = [container_binary, 'run']
+    if interactive:
+        command_exec.extend(['--interactive'])
+
+        command_exec.extend([
+                '--rm',
+                '--net=host',
+                '-v', '/etc/ceph:/etc/ceph:z',
+                '-v', '/var/lib/ceph/:/var/lib/ceph/:z',
+                '-v', '/var/log/ceph/:/var/log/ceph/:z',
+                '--entrypoint=' + binary, container_image
+        ])
     return command_exec
 
 
@@ -126,16 +130,29 @@ def is_containerized():
     return container_image
 
 
-def pre_generate_ceph_cmd(container_image=None):
+def pre_generate_ceph_cmd(container_image=None, interactive=False):
     '''
     Generate ceph prefix comaand
     '''
     if container_image:
-        cmd = container_exec('ceph', container_image)
+        cmd = container_exec('ceph', container_image, interactive=interactive)
     else:
         cmd = ['ceph']
 
     return cmd
+
+
+def exec_command(module, cmd, stdin=None):
+    '''
+    Execute command(s)
+    '''
+
+    binary_data = False
+    if stdin:
+        binary_data = True
+    rc, out, err = module.run_command(cmd, data=stdin, binary_data=binary_data)
+
+    return rc, cmd, out, err
 
 
 def exit_module(module, out, rc, cmd, err, startd, changed=False):
@@ -153,6 +170,17 @@ def exit_module(module, out, rc, cmd, err, startd, changed=False):
         changed=changed,
     )
     module.exit_json(**result)
+
+
+def fatal(message, module):
+    '''
+    Report a fatal error and exit
+    '''
+
+    if module:
+        module.fail_json(msg=message, rc=1)
+    else:
+        raise(Exception(message))
 
 
 def main():
@@ -187,7 +215,7 @@ def main():
         )
     else:
         rc, out, err = module.run_command(cmd)
-        if out == "module '{}' is already enabled".format(name):
+        if 'is already enabled' in err:
             changed = False
         else:
             changed = True
