@@ -103,7 +103,7 @@
 
 - name: create manager keyring
   shell: |
-    set -euo pipefail
+    set -euxo pipefail
     ceph \
       auth get-or-create mgr.{{ inventory_hostname }} \
       mon 'allow profile mgr' \
@@ -158,7 +158,7 @@
 
 - name: "systemctl start ceph-mgr@{{ inventory_hostname }}.service"
   shell: |
-    set -euo pipefail
+    set -euxo pipefail
     systemctl enable ceph-mgr@{{ inventory_hostname }}.service
     systemctl start ceph-mgr@{{ inventory_hostname }}.service
   args:
