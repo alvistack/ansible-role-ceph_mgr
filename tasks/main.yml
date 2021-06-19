@@ -128,7 +128,7 @@
   ceph_key:
     name: "{{ item.name }}"
     dest: "{{ item.dest }}"
-    caps: "{{ item.caps }}"
+    caps: "{{ item.caps | default(omit) }}"
     owner: "{{ item.owner | default('ceph') }}"
     group: "{{ item.group | default('ceph') }}"
     mode: "{{ item.mode | default('0400') }}"
@@ -136,8 +136,6 @@
     - name: "mgr.{{ inventory_hostname }}"
       dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring"
       caps: { mon: "allow profile mgr", osd: "allow *", mds: "allow *" }
-  register: result
-  changed_when: result is not succeeded
   notify:
     - ceph_mgr | systemctl restart ceph-mgr.target
 
