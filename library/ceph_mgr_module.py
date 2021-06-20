@@ -201,7 +201,10 @@ def main():
 
     container_image = is_containerized()
 
-    cmd = generate_ceph_cmd(['mgr', 'module'], [state, name], cluster=cluster, container_image=container_image)  # noqa: E501
+    cmd = generate_ceph_cmd(['mgr', 'module'],
+                            [state, name],
+                            cluster=cluster,
+                            container_image=container_image)
 
     if module.check_mode:
         exit_module(
