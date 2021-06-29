@@ -19,9 +19,13 @@ ceph_release: "16.2"
 
 # Ceph Manager configs.
 ceph_mgr_config:
+  - { state: "present", section: "mgr", option: "debug mgr", value: "0" }
   - { state: "present", section: "mgr", option: "mgr tick period", value: "5" }
   - { state: "present", section: "mgr", option: "mon mgr beacon grace", value: "30" }
 
 # Ceph Manager module to be enabled.
 ceph_mgr_module:
-  - { name: "pg_autoscaler" }
+  - { state: "disable", name: "iostat" }
+  - { state: "disable", name: "nfs" }
+  - { state: "disable", name: "restful" }
+  - { state: "enable", name: "pg_autoscaler" }

@@ -62,8 +62,6 @@
     state: "{{ item.state | default('directory') }}"
   loop:
     - { dest: "/etc/ceph" }
-    - { dest: "/lib/systemd/system" }
-    - { dest: "/lib/systemd/system/ceph-mgr.target.d" }
     - { dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}", owner: "ceph", group: "ceph" }
 
 - name: base64 encode
@@ -139,24 +137,6 @@
   notify:
     - ceph_mgr | systemctl restart ceph-mgr.target
 
-- name: tweak settings in ini files
-  ini_file:
-    section: "{{ item.section }}"
-    option: "{{ item.option }}"
-    value: "{{ item.value }}"
-    state: "{{ item.state }}"
-    path: "/lib/systemd/system/ceph-mgr@.service"
-    no_extra_spaces: true
-    mode: "0644"
-  loop:
-    - { state: "present", section: "Service", option: "ProtectClock", value: "false" }
-    - { state: "present", section: "Service", option: "ProtectHostname", value: "false" }
-    - { state: "present", section: "Service", option: "ProtectKernelLogs", value: "false" }
-    - { state: "present", section: "Service", option: "RestrictSUIDSGID", value: "false" }
-  notify:
-    - ceph_mgr | systemctl daemon-reload
-    - ceph_mgr | systemctl restart ceph-mgr.target
-
 - name: prepare files
   file:
     dest: "{{ item.dest }}"
@@ -165,11 +145,8 @@
     mode: "{{ item.mode | default('0644') }}"
     state: "{{ item.state | default('file') }}"
   loop:
-    - { dest: "/lib/systemd/system/ceph-mgr.target" }
-    - { dest: "/lib/systemd/system/ceph-mgr@.service" }
     - { dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring", owner: "ceph", group: "ceph", mode: "0400" }
   notify:
-    - ceph_mgr | systemctl daemon-reload
     - ceph_mgr | systemctl restart ceph-mgr.target
 
 - name: flush handlers
@@ -196,7 +173,7 @@
 - name: ceph mgr module enable
   ceph_mgr_module:
     name: "{{ item.name }}"
-    state: "enable"
+    state: "{{ item.state }}"
   loop: "{{ ceph_mgr_module }}"
   when: inventory_hostname == ansible_play_hosts[0]
   changed_when: false
