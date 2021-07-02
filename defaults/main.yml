@@ -19,7 +19,7 @@ ceph_release: "16.2"
 
 # Ceph Manager configs.
 ceph_mgr_config:
-  - { state: "present", section: "mgr", option: "mgr initial modules", value: "pg autoscaler" }
+  - { state: "present", section: "mgr", option: "mgr initial modules", value: "pg_autoscaler" }
   - { state: "present", section: "mgr", option: "mgr tick period", value: "5" }
   - { state: "present", section: "mgr", option: "mon mgr beacon grace", value: "30" }
 
