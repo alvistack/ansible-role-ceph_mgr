@@ -19,7 +19,11 @@ ceph_release: "16.2"
 
 # Ceph Manager configs.
 ceph_mgr_config:
+  - { state: "present", section: "mgr", option: "mgr_client_bytes", value: "33554432" }
   - { state: "present", section: "mgr", option: "mgr_initial_modules", value: "pg_autoscaler" }
+  - { state: "present", section: "mgr", option: "mgr_mds_bytes", value: "33554432" }
+  - { state: "present", section: "mgr", option: "mgr_mon_bytes", value: "33554432" }
+  - { state: "present", section: "mgr", option: "mgr_osd_bytes", value: "134217728" }
   - { state: "present", section: "mgr", option: "mgr_tick_period", value: "2" }
   - { state: "present", section: "mgr", option: "mon_mgr_beacon_grace", value: "30" }
 
