@@ -32,3 +32,17 @@
       command: mount.ceph -h
       register: result
       changed_when: result is not succeeded
+
+    - name: ceph health detail
+      shell: |
+        set -euxo pipefail
+        ceph health detail | grep 'TOO_FEW_OSD'
+      args:
+        executable: "/bin/bash"
+      loop: "{{ ansible_play_hosts }}"
+      delegate_to: "{{ item }}"
+      run_once: true
+      register: result
+      changed_when: result is not succeeded
+      until: result is succeeded
+      retries: 60
