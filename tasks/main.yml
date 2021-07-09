@@ -130,6 +130,7 @@
     owner: "{{ item.owner | default('ceph') }}"
     group: "{{ item.group | default('ceph') }}"
     mode: "{{ item.mode | default('0400') }}"
+    state: "present"
   loop:
     - name: "mgr.{{ inventory_hostname }}"
       dest: "/var/lib/ceph/mgr/ceph-{{ inventory_hostname }}/keyring"
