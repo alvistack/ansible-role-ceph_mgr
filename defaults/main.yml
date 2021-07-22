@@ -33,4 +33,7 @@ ceph_mgr_config:
 
 # Ceph Manager module to be enabled.
 ceph_mgr_module:
+  - { state: "disable", name: "iostat" }
+  - { state: "disable", name: "nfs" }
+  - { state: "disable", name: "restful" }
   - { state: "enable", name: "pg_autoscaler" }
