@@ -71,6 +71,7 @@
   vars:
     _params:
       - "/etc/ceph/ceph.client.admin.keyring"
+      - "/var/lib/ceph/bootstrap-mgr/ceph.keyring"
   args:
     executable: "/bin/bash"
   delegate_to: "{{ groups['ceph_mon'][0] }}"
