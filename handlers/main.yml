@@ -15,7 +15,7 @@
 # limitations under the License.
 
 - name: ceph_mgr | systemctl restart ceph-mgr.target
-  service:
+  ansible.builtin.service:
     name: "ceph-mgr.target"
     state: "restarted"
     enabled: true
