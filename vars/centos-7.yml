@@ -20,4 +20,7 @@ _yum:
   "17.2": []
   "16.2": []
   "15.2":
+    - { state: "latest", name: "python3-cherrypy" }
+    - { state: "latest", name: "python3-pecan" }
+    - { state: "latest", name: "python3-werkzeug" }
     - { state: "present", name: "ceph-mgr-{{ ceph_version }}*" }
