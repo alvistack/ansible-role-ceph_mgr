@@ -150,16 +150,6 @@
   notify:
     - ceph_mgr | systemctl restart ceph-mgr.target
 
-- name: hotfix https://github.com/ceph/ceph/pull/46523
-  ansible.builtin.shell: |
-    set -euxo pipefail
-    cd /usr/share/ceph
-    curl -skL https://patch-diff.githubusercontent.com/raw/ceph/ceph/pull/46523.diff | patch -p3
-  args:
-    executable: "/bin/bash"
-  register: result
-  changed_when: result is not succeeded
-
 - name: flush handlers
   ansible.builtin.meta: flush_handlers
 
