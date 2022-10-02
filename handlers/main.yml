@@ -15,10 +15,11 @@
 # limitations under the License.
 
 - name: ceph_mgr | hotfix https://github.com/ceph/ceph/pull/46523
-  ansible.builtin.shell: |
-    set -euxo pipefail
-    cd /usr/share/ceph
-    curl -skL https://patch-diff.githubusercontent.com/raw/ceph/ceph/pull/46523.diff | patch -p3
+  ansible.builtin.shell:
+    cmd: |
+      set -euxo pipefail
+      cd /usr/share/ceph
+      curl -skL https://patch-diff.githubusercontent.com/raw/ceph/ceph/pull/46523.diff | patch -p3
   args:
     executable: "/bin/bash"
   register: result
