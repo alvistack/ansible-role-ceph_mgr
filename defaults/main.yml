@@ -22,15 +22,15 @@ ceph_version: "{{ _ceph_version[ceph_release] }}"
 
 # Ceph Manager configs.
 ceph_mgr_config:
-  - { state: "present", section: "mgr", option: "mgr_client_bytes", value: "33554432" }
-  - { state: "present", section: "mgr", option: "mgr_client_messages", value: "128" }
+  - { state: "present", section: "mgr", option: "mgr_client_bytes", value: "67108864" }
+  - { state: "present", section: "mgr", option: "mgr_client_messages", value: "256" }
   - { state: "present", section: "mgr", option: "mgr_initial_modules", value: "pg_autoscaler" }
-  - { state: "present", section: "mgr", option: "mgr_mds_bytes", value: "33554432" }
-  - { state: "present", section: "mgr", option: "mgr_mds_messages", value: "32" }
-  - { state: "present", section: "mgr", option: "mgr_mon_bytes", value: "33554432" }
-  - { state: "present", section: "mgr", option: "mgr_mon_messages", value: "32" }
-  - { state: "present", section: "mgr", option: "mgr_osd_bytes", value: "134217728" }
-  - { state: "present", section: "mgr", option: "mgr_osd_messages", value: "2048" }
+  - { state: "present", section: "mgr", option: "mgr_mds_bytes", value: "67108864" }
+  - { state: "present", section: "mgr", option: "mgr_mds_messages", value: "64" }
+  - { state: "present", section: "mgr", option: "mgr_mon_bytes", value: "67108864" }
+  - { state: "present", section: "mgr", option: "mgr_mon_messages", value: "64" }
+  - { state: "present", section: "mgr", option: "mgr_osd_bytes", value: "268435456" }
+  - { state: "present", section: "mgr", option: "mgr_osd_messages", value: "4096" }
   - { state: "present", section: "mgr", option: "mgr_tick_period", value: "2" }
   - { state: "present", section: "mgr", option: "mon_mgr_beacon_grace", value: "30" }
 
