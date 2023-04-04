@@ -22,6 +22,6 @@ _apt:
     - { state: "latest", name: "python3-cherrypy3" }
     - { state: "latest", name: "python3-pecan" }
     - { state: "latest", name: "python3-werkzeug" }
-    - { state: "latest", name: "ceph-mgr" }
+    - { state: "present", name: "ceph-mgr=100:{{ ceph_version }}*" }
   "16.2": []
   "15.2": []
