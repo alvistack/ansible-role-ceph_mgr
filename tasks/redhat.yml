@@ -31,7 +31,6 @@
   register: result
   until: result is succeeded
   notify:
-    - ceph_mgr | hotfix https://github.com/ceph/ceph/pull/46523
     - ceph_mgr | systemctl restart ceph-mgr.target
 
 - name: yum versionlock add

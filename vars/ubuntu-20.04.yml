@@ -18,19 +18,16 @@ _ceph_release: "17.2"
 
 _apt:
   "17.2":
-    - { state: "latest", name: "patch" }
     - { state: "latest", name: "python3-cherrypy3" }
     - { state: "latest", name: "python3-pecan" }
     - { state: "latest", name: "python3-werkzeug" }
-    - { state: "present", name: "ceph-mgr={{ ceph_version }}*" }
+    - { state: "present", name: "ceph-mgr=100:{{ ceph_version }}*" }
   "16.2":
-    - { state: "latest", name: "patch" }
     - { state: "latest", name: "python3-cherrypy3" }
     - { state: "latest", name: "python3-pecan" }
     - { state: "latest", name: "python3-werkzeug" }
     - { state: "present", name: "ceph-mgr={{ ceph_version }}*" }
   "15.2":
-    - { state: "latest", name: "patch" }
     - { state: "latest", name: "python3-cherrypy3" }
     - { state: "latest", name: "python3-pecan" }
     - { state: "latest", name: "python3-werkzeug" }
