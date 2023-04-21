@@ -13,11 +13,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-_ceph_release: "17.2"
-
-_zypper:
-  - { state: "latest", name: "python3-cherrypy" }
-  - { state: "latest", name: "python3-pecan" }
-  - { state: "latest", name: "python3-werkzeug" }
-  - { state: "present", name: "ceph-mgr-100:{{ ceph_version }}" }
