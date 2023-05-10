@@ -18,22 +18,22 @@ _ceph_release: "17.2"
 
 _zypper:
   "17.2":
-    - { state: "latest", name: "python3-cherrypy" }
+    - { state: "latest", name: "python3-CherryPy" }
     - { state: "latest", name: "python3-pecan" }
-    - { state: "latest", name: "python3-werkzeug" }
+    - { state: "latest", name: "python3-Werkzeug" }
     - { state: "present", name: "libcephsqlite-100:{{ ceph_version }}" }
     - { state: "present", name: "ceph-mgr-modules-core-100:{{ ceph_version }}" }
     - { state: "present", name: "ceph-mgr-100:{{ ceph_version }}" }
   "16.2":
-    - { state: "latest", name: "python3-cherrypy" }
+    - { state: "latest", name: "python3-CherryPy" }
     - { state: "latest", name: "python3-pecan" }
-    - { state: "latest", name: "python3-werkzeug" }
+    - { state: "latest", name: "python3-Werkzeug" }
     - { state: "present", name: "libcephsqlite-100:{{ ceph_version }}" }
     - { state: "present", name: "ceph-mgr-modules-core-100:{{ ceph_version }}" }
     - { state: "present", name: "ceph-mgr-100:{{ ceph_version }}" }
   "15.2":
-    - { state: "latest", name: "python3-cherrypy" }
+    - { state: "latest", name: "python3-CherryPy" }
     - { state: "latest", name: "python3-pecan" }
-    - { state: "latest", name: "python3-werkzeug" }
+    - { state: "latest", name: "python3-Werkzeug" }
     - { state: "present", name: "ceph-mgr-modules-core-100:{{ ceph_version }}" }
     - { state: "present", name: "ceph-mgr-100:{{ ceph_version }}" }
