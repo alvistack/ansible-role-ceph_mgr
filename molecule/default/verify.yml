@@ -41,6 +41,7 @@
       ansible.builtin.shell:
         cmd: |
           set -euxo pipefail
+          ceph crash archive-all
           ceph health detail | grep 'TOO_FEW_OSD'
       args:
         executable: "/bin/bash"
