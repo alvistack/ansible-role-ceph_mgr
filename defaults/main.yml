@@ -22,21 +22,21 @@ ceph_version: "{{ _ceph_version[ceph_release] }}"
 
 # Ceph Manager configs.
 ceph_mgr_config:
-  - { state: "present", section: "mgr", option: "mgr_client_bytes", value: "33554432" }
-  - { state: "present", section: "mgr", option: "mgr_client_messages", value: "128" }
-  - { state: "present", section: "mgr", option: "mgr_initial_modules", value: "pg_autoscaler" }
-  - { state: "present", section: "mgr", option: "mgr_mds_bytes", value: "33554432" }
-  - { state: "present", section: "mgr", option: "mgr_mds_messages", value: "32" }
-  - { state: "present", section: "mgr", option: "mgr_mon_bytes", value: "33554432" }
-  - { state: "present", section: "mgr", option: "mgr_mon_messages", value: "32" }
-  - { state: "present", section: "mgr", option: "mgr_osd_bytes", value: "134217728" }
-  - { state: "present", section: "mgr", option: "mgr_osd_messages", value: "2048" }
-  - { state: "present", section: "mgr", option: "mgr_tick_period", value: "2" }
-  - { state: "present", section: "mgr", option: "mon_mgr_beacon_grace", value: "30" }
+  - { state: present, section: mgr, option: mgr_client_bytes, value: "33554432" }
+  - { state: present, section: mgr, option: mgr_client_messages, value: "128" }
+  - { state: present, section: mgr, option: mgr_initial_modules, value: pg_autoscaler }
+  - { state: present, section: mgr, option: mgr_mds_bytes, value: "33554432" }
+  - { state: present, section: mgr, option: mgr_mds_messages, value: "32" }
+  - { state: present, section: mgr, option: mgr_mon_bytes, value: "33554432" }
+  - { state: present, section: mgr, option: mgr_mon_messages, value: "32" }
+  - { state: present, section: mgr, option: mgr_osd_bytes, value: "134217728" }
+  - { state: present, section: mgr, option: mgr_osd_messages, value: "2048" }
+  - { state: present, section: mgr, option: mgr_tick_period, value: "2" }
+  - { state: present, section: mgr, option: mon_mgr_beacon_grace, value: "30" }
 
 # Ceph Manager module to be enabled.
 ceph_mgr_module:
-  - { state: "disable", name: "iostat" }
-  - { state: "disable", name: "nfs" }
-  - { state: "disable", name: "restful" }
-  - { state: "enable", name: "pg_autoscaler" }
+  - { state: disable, name: iostat }
+  - { state: disable, name: nfs }
+  - { state: disable, name: restful }
+  - { state: enable, name: pg_autoscaler }
