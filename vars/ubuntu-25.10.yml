@@ -31,23 +31,6 @@ _apt:
     - { state: present, name: "libsqlite3-mod-ceph=100:{{ ceph_version }}*" }
     - { state: present, name: "ceph-mgr-modules-core=100:{{ ceph_version }}*" }
     - { state: present, name: "ceph-mgr=100:{{ ceph_version }}*" }
-  "17.2":
-    - { state: latest, name: python3-cherrypy3 }
-    - { state: latest, name: python3-pecan }
-    - { state: latest, name: python3-werkzeug }
-    - { state: present, name: "libsqlite3-mod-ceph=100:{{ ceph_version }}*" }
-    - { state: present, name: "ceph-mgr-modules-core=100:{{ ceph_version }}*" }
-    - { state: present, name: "ceph-mgr=100:{{ ceph_version }}*" }
-  "16.2":
-    - { state: latest, name: python3-cherrypy3 }
-    - { state: latest, name: python3-pecan }
-    - { state: latest, name: python3-werkzeug }
-    - { state: present, name: "libsqlite3-mod-ceph=100:{{ ceph_version }}*" }
-    - { state: present, name: "ceph-mgr-modules-core=100:{{ ceph_version }}*" }
-    - { state: present, name: "ceph-mgr=100:{{ ceph_version }}*" }
-  "15.2":
-    - { state: latest, name: python3-cherrypy3 }
-    - { state: latest, name: python3-pecan }
-    - { state: latest, name: python3-werkzeug }
-    - { state: present, name: "ceph-mgr-modules-core=100:{{ ceph_version }}*" }
-    - { state: present, name: "ceph-mgr=100:{{ ceph_version }}*" }
+  "17.2": []
+  "16.2": []
+  "15.2": []
