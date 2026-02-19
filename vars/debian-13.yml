@@ -17,5 +17,7 @@
 _ceph_release: "19.2"
 
 _apt:
+  - { state: present, name: "ceph-base=100:{{ ceph_version }}*" }
   - { state: present, name: "ceph-mgr-modules-core=100:{{ ceph_version }}*" }
+  - { state: present, name: "libsqlite3-mod-ceph=100:{{ ceph_version }}*" }
   - { state: present, name: "ceph-mgr=100:{{ ceph_version }}*" }

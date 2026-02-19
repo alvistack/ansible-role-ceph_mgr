@@ -17,5 +17,7 @@
 _ceph_release: "19.2"
 
 _yum:
+  - { state: present, name: "ceph-base-100:{{ ceph_version }}*" }
   - { state: present, name: "ceph-mgr-modules-core-100:{{ ceph_version }}*" }
+  - { state: present, name: "libcephsqlite-100:{{ ceph_version }}*" }
   - { state: present, name: "ceph-mgr-100:{{ ceph_version }}*" }
