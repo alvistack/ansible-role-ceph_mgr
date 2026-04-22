@@ -22,14 +22,14 @@ ceph_version: "{{ _ceph_version[ceph_release] }}"
 
 # Ceph Manager configs.
 ceph_mgr_config:
-  - { state: present, section: mgr, option: mgr_client_bytes, value: "{{ 32 * 1024 * 1024 }}" }  # 128Mi / 4
+  - { state: present, section: mgr, option: mgr_client_bytes, value: "{{ 32 * 1024 * 1024 | int }}" }  # 128Mi / 4
   - { state: present, section: mgr, option: mgr_client_messages, value: "128" }  # 512 / 4
   - { state: present, section: mgr, option: mgr_initial_modules, value: pg_autoscaler }
-  - { state: present, section: mgr, option: mgr_mds_bytes, value: "{{ 32 * 1024 * 1024 }}" }  # 128Mi / 4
+  - { state: present, section: mgr, option: mgr_mds_bytes, value: "{{ 32 * 1024 * 1024 | int }}" }  # 128Mi / 4
   - { state: present, section: mgr, option: mgr_mds_messages, value: "32" }  # 128 / 4
-  - { state: present, section: mgr, option: mgr_mon_bytes, value: "{{ 32 * 1024 * 1024 }}" }  # 128Mi / 4
+  - { state: present, section: mgr, option: mgr_mon_bytes, value: "{{ 32 * 1024 * 1024 | int }}" }  # 128Mi / 4
   - { state: present, section: mgr, option: mgr_mon_messages, value: "32" }  # 128 / 4
-  - { state: present, section: mgr, option: mgr_osd_bytes, value: "{{ 128 * 1024 * 1024 }}" }  # 512Mi / 4
+  - { state: present, section: mgr, option: mgr_osd_bytes, value: "{{ 128 * 1024 * 1024 | int }}" }  # 512Mi / 4
   - { state: present, section: mgr, option: mgr_osd_messages, value: "2048" }  # 8192 / 4
   - { state: present, section: mgr, option: mgr_tick_period, value: "2" }  # 2
   - { state: present, section: mgr, option: mon_mgr_beacon_grace, value: "30" }  # 30
