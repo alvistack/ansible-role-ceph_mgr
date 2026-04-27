@@ -27,14 +27,14 @@ ceph_memtotal_mb: "{{ (((ansible_facts['memtotal_mb'] + 8191) // 8192) * 8192) |
 # See https://github.com/ceph/ceph/blob/main/src/common/options/mgr.yaml.in
 # See https://github.com/ceph/ceph/blob/main/src/common/options/mon.yaml.in
 ceph_mgr_config:
-  - { state: present, section: mgr, option: mgr_client_bytes, value: "{{ (ceph_memtotal_mb * (16 / 8192) * 1024 * 1024) | int }}" }  # 128Mi / 8 ~= 16Mi
+  - { state: present, section: mgr, option: mgr_client_bytes, value: "{{ ((ceph_memtotal_mb | float) * (16 / 8192) * 1024 * 1024) | int }}" }  # 128Mi / 8 ~= 16Mi
   - { state: present, section: mgr, option: mgr_client_messages, value: "64" }  # 512 / 8 ~= 64
   - { state: present, section: mgr, option: mgr_initial_modules, value: pg_autoscaler }
-  - { state: present, section: mgr, option: mgr_mds_bytes, value: "{{ (ceph_memtotal_mb * (16 / 8192) * 1024 * 1024) | int }}" }  # 128Mi / 8 ~= 16Mi
+  - { state: present, section: mgr, option: mgr_mds_bytes, value: "{{ ((ceph_memtotal_mb | float) * (16 / 8192) * 1024 * 1024) | int }}" }  # 128Mi / 8 ~= 16Mi
   - { state: present, section: mgr, option: mgr_mds_messages, value: "16" }  # 128 / 8 ~= 16
-  - { state: present, section: mgr, option: mgr_mon_bytes, value: "{{ (ceph_memtotal_mb * (16 / 8192) * 1024 * 1024) | int }}" }  # 128Mi / 8 ~= 16Mi
+  - { state: present, section: mgr, option: mgr_mon_bytes, value: "{{ ((ceph_memtotal_mb | float) * (16 / 8192) * 1024 * 1024) | int }}" }  # 128Mi / 8 ~= 16Mi
   - { state: present, section: mgr, option: mgr_mon_messages, value: "16" }  # 128 / 8 ~= 16
-  - { state: present, section: mgr, option: mgr_osd_bytes, value: "{{ (ceph_memtotal_mb * (64 / 8192) * 1024 * 1024) | int }}" }  # 512Mi / 8 ~= 64Mi
+  - { state: present, section: mgr, option: mgr_osd_bytes, value: "{{ ((ceph_memtotal_mb | float) * (64 / 8192) * 1024 * 1024) | int }}" }  # 512Mi / 8 ~= 64Mi
   - { state: present, section: mgr, option: mgr_osd_messages, value: "1024" }  # 8192 / 8 ~= 1024
   - { state: present, section: mgr, option: mgr_tick_period, value: "2" }  # 2
   - { state: present, section: mgr, option: mon_mgr_beacon_grace, value: "30" }  # 30
