@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # Copyright 2020, Red Hat, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +20,9 @@ __metaclass__ = type
 from ansible.module_utils.basic import AnsibleModule
 
 import datetime
+import json
 import os
+import re
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -101,7 +105,7 @@ def container_exec(binary, container_image, interactive=False):
     Build the docker CLI to run a command inside a container
     '''
 
-    container_binary = os.getenv('CEPH_CONTAINER_BINARY')
+    container_binary = os.getenv('CEPH_CONTAINER_BINARY', 'podman')
     command_exec = [container_binary, 'run']
 
     if interactive:
@@ -183,6 +187,47 @@ def fatal(message, module):
         raise (Exception(message))
 
 
+def detect_ceph_version(module, container_image=None):
+    '''
+    Automatically detect the major version of Ceph running on host/container
+    '''
+    cmd = pre_generate_ceph_cmd(container_image=container_image)
+    cmd.append('--version')
+    rc, out, err = module.run_command(cmd)
+
+    if rc == 0 and out:
+        match = re.search(r'version\s+(\d+)\.', out)
+        if match:
+            return int(match.group(1))
+
+    # Fallback to 20 if version query fails
+    return 20
+
+
+def get_enabled_modules(module, cluster='ceph', container_image=None):
+    '''
+    List currently enabled MGR modules
+    '''
+    cmd = generate_ceph_cmd(['mgr', 'module'],
+                            ['ls'],
+                            cluster=cluster,
+                            container_image=container_image)
+    rc, out, err = module.run_command(cmd)
+
+    enabled_modules = []
+    if rc == 0 and out:
+        try:
+            data = json.loads(out)
+            if isinstance(data, dict) and 'enabled_modules' in data:
+                enabled_modules = data['enabled_modules']
+            elif isinstance(data, list):
+                enabled_modules = data
+        except ValueError:
+            pass
+
+    return enabled_modules
+
+
 def main():
     module = AnsibleModule(
         argument_spec=dict(
@@ -201,12 +246,15 @@ def main():
 
     container_image = is_containerized()
 
+    enabled_modules = get_enabled_modules(module, cluster=cluster, container_image=container_image)  # noqa: E501
+    is_enabled = name in enabled_modules
+
     cmd = generate_ceph_cmd(['mgr', 'module'],
                             [state, name],
                             cluster=cluster,
                             container_image=container_image)
 
-    if module.check_mode:
+    if (state == 'enable' and is_enabled) or (state == 'disable' and not is_enabled):  # noqa: E501
         exit_module(
             module=module,
             out='',
@@ -216,21 +264,39 @@ def main():
             startd=startd,
             changed=False
         )
-    else:
-        rc, out, err = module.run_command(cmd)
-        if 'is already enabled' in err:
-            changed = False
-        else:
-            changed = True
+
+    if module.check_mode:
         exit_module(
             module=module,
-            out=out,
-            rc=rc,
+            out='',
+            rc=0,
             cmd=cmd,
-            err=err,
+            err='',
             startd=startd,
-            changed=changed
+            changed=True
         )
+
+    rc, out, err = module.run_command(cmd)
+
+    if rc != 0:
+        if ('is already enabled' in err or 'is already disabled' in err or
+                'is already enabled' in out or 'is already disabled' in out):
+            changed = False
+            rc = 0
+        else:
+            module.fail_json(msg='failed to {} MGR module {}: {}'.format(state, name, err), rc=rc)  # noqa: E501
+    else:
+        changed = True
+
+    exit_module(
+        module=module,
+        out=out,
+        rc=rc,
+        cmd=cmd,
+        err=err,
+        startd=startd,
+        changed=changed
+    )
 
 
 if __name__ == '__main__':
